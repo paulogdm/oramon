@@ -1,0 +1,25 @@
+{
+  "name": "oramon",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mocha": "^3.1.2",
+    "node": "^0.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulogdm/oramon.git"
+  },
+  "author": "pgdm &&",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paulogdm/oramon/issues"
+  },
+  "homepage": "https://github.com/paulogdm/oramon#readme"
+}
