@@ -1,10 +1,11 @@
 {
   "name": "oramon",
   "version": "0.0.1",
-  "description": "",
+  "description": "nil",
   "main": "main.js",
   "dependencies": {
     "express": "^4.14.0",
+    "material-design-lite": "^1.2.1",
     "mocha": "^3.1.2",
     "mongodb": "^2.2.11",
     "node": "^0.0.0",

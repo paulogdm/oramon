@@ -3,9 +3,47 @@
 <head>
 	<title>Oramon</title>
 </head>
+<script src="/vuescript/vue.js"></script>
+<script src="/mdlscript/material.js"></script>
+<link rel="stylesheet" type="text/css" href="/mdlscript/material.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/main.css" media="screen" />
 
 <body>
-
+	<div class="card-container">
+		<table id="list-tables" class="card mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-js-data-table mdl-shadow--2dp">
+			<thead>
+				<tr>
+					<th class="mdl-data-table__cell--non-numeric">Table Name</th>
+					<th class="">Embedded</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="table in tables">
+					<td class="mdl-data-table__cell--non-numeric">
+						{{table.name}}
+					</td>
+					<td>
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+							<input type="checkbox" class="mdl-checkbox__input" :disabled=!table.fk_flag>
+						</label>
+					</td>
+					<td>
+						<div class="" v-show=table.fk_flag>
+							<select :disabled=false>
+							  <option v-for="option in table.fk_array">{{option}}</option>
+							</select>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id=>
+			
+		</div>
+	</div>
 </body>
+
+<script src="/main.js"></script>
 </html>
 
