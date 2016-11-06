@@ -5,42 +5,51 @@
 </head>
 <script src="/vuescript/vue.js"></script>
 <script src="/mdlscript/material.js"></script>
-<link rel="stylesheet" type="text/css" href="/mdlscript/material.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/mdlcss/material.min.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="/main.css" media="screen" />
 
 <body>
-	<div class="card-container">
-		<table id="list-tables" class="card mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-js-data-table mdl-shadow--2dp">
+	<div class="card" id="list-tables">
+	<span class="mdl-textfield">
+		OracleDB table to mongoDB document.
+	</span>
+		<table class="table-container mdl-card--border mdl-data-table mdl-js-data-table mdl-js-data-table mdl-shadow--2dp">
 			<thead>
 				<tr>
+					<th class="mdl-data-table__cell--non-numeric">Select Tables</th>
 					<th class="mdl-data-table__cell--non-numeric">Table Name</th>
 					<th class="">Embedded</th>
-					<th></th>
+					<th>Table to Embedded</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="table in tables">
 					<td class="mdl-data-table__cell--non-numeric">
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+							<input type="checkbox" class="mdl-checkbox__input" v-bind:value="table.name" v-model="table_checked">
+						</label>
+					</td>
+					<td class="mdl-data-table__cell--non-numeric">
 						{{table.name}}
 					</td>
 					<td>
 						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-							<input type="checkbox" class="mdl-checkbox__input" :disabled=!table.fk_flag>
+							<input type="checkbox" class="mdl-checkbox__input" v-bind:value="table.name" :disabled="!table.fk_flag" v-model="emb_checked">
 						</label>
 					</td>
 					<td>
 						<div class="" v-show=table.fk_flag>
-							<select :disabled=false>
-							  <option v-for="option in table.fk_array">{{option}}</option>
+							<select :disabled="(-1 == emb_checked.indexOf(table.name))">
+								<option v-for="option in table.fk_array">{{option}}</option>
 							</select>
 						</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<div id=>
-			
-		</div>
+		<button class="button-container mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			Submit
+		</button>
 	</div>
 </body>
 

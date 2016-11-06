@@ -1,23 +1,29 @@
 
 body {
   background: #e2e1e0;
+text-align: center;
 }
 
 .card {
-  overflow:auto;
-  position: relative;
-  clear:both;
-  float:left;
-}
-
-.card-container {
+  box-shadow: 3px 3px 5px 0px rgba(50, 50, 50, 0.81);
   margin: 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
   background: #fff;
-  display: inline-block.
+  display: inline-block;
 }
 
-.card-container:hover {
+.card:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.table-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.button-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  float: right;
 }

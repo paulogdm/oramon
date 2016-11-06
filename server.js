@@ -5,6 +5,7 @@ var config = require('./config').config;
 
 app.use('/vuescript', express.static(__dirname + '/node_modules/vue/dist/'));
 app.use('/mdlscript', express.static(__dirname + '/node_modules/material-design-lite/'));
+app.use('/mdlcss', express.static(__dirname + '/views/'));
 app.set('view engine', 'html');
 
 
