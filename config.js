@@ -1,7 +1,15 @@
 module.exports.config = {
 	port : 1337,
 	
-	mongo : {},
+	mongo : {
+		user : "",
+		password : "",
+		url : ""
+	},
 	
-	oracle : {}
+	oracle : {
+		user : "",
+		password : "",
+		url : ""
+	}
 };
