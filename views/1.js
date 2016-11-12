@@ -8,24 +8,36 @@ tables.push({name: "LE05", fk_flag : false, fk_array : []});
 
 table_names = [];
 
-
 var vtables = new Vue({
-	//element of HTML, or id, to attach this 
+	//element of HTML, or id, to attach this
 	el: "#list-tables",
 
 	//data of vue 'class'
 	data: {
-		tables: tables, //array of tables
+		loading : true,
+		tables: null, //array of tables
 		table_checked: [], //array of select checkbox
 		emb_checked: [] //array of select checkbox
 	},
 
-	// when the js is loaded, then run this.
-	ready: function() {
+	methods : {
+		fetchTables : function(){
+			this.$http.get('/get/tables').then(function(res){
+				
+				this.tables = res.data;
+				this.loading = false;
 
-		for (table in this.tables){
-			this.table_checked.push(this.tables[table].name);
+				for (table in this.tables){ 
+					this.table_checked.push(this.tables[table].name);
+				}
+
+			})
 		}
+	},
+
+	// when the vue object is created, then run this.
+	created: function() {
+		this.fetchTables();
 	}
 });
 
@@ -37,4 +49,4 @@ var vtables = new Vue({
 		fk_flag: true, 						//foreign key constraint?
 		fk_array: ["LE02AAA", "LE04BBBB"]	//wich tables?
 	}
-*/
+	*/

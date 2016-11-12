@@ -3,16 +3,22 @@
 <head>
 	<title>Oramon</title>
 </head>
-<script src="/vuescript/vue.js"></script>
+<script src="/vue/vue.js"></script>
+<script src="/vueres/vue-resource.js"></script>
 <script src="/mdlscript/material.js"></script>
-<link rel="stylesheet" type="text/css" href="/mdlcss/material.min.css" media="screen" />
+
+<link rel="stylesheet" type="text/css" href="/mdl/material.min.css" media="screen" />
+
 <link rel="stylesheet" type="text/css" href="/item/1.css" media="screen" />
 
 <body>
 	<div class="card" id="list-tables">
-	<span class="mdl-textfield">
-		OracleDB table to mongoDB document.
-	</span>
+		<div v-show="loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+		
+		<span class="mdl-textfield">
+			OracleDB table to mongoDB document.
+		</span>
+
 		<table class="table-container mdl-card--border mdl-data-table mdl-js-data-table mdl-js-data-table mdl-shadow--2dp">
 			<thead>
 				<tr>
