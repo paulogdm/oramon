@@ -15,7 +15,7 @@ var vtables = new Vue({
 	//data of vue 'class'
 	data: {
 		loading : true,
-		tables: null, //array of tables
+		tables: [], //array of tables
 		table_checked: [], //array of select checkbox
 		emb_checked: [] //array of select checkbox
 	},
@@ -23,7 +23,7 @@ var vtables = new Vue({
 	methods : {
 		fetchTables : function(){
 			this.$http.get('/get/tables').then(function(res){
-				
+
 				this.tables = res.data;
 				this.loading = false;
 

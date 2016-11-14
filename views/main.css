@@ -1,0 +1,18 @@
+body{
+	text-align: center; 
+	background-color: #e2e1e0
+}
+
+.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdl-card {
+
+}
+
+a {
+	text-decoration: none;
+}
