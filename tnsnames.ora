@@ -1,0 +1,7 @@
+icmc =
+(DESCRIPTION =
+   (ADDRESS = (PROTOCOL = TCP)(HOST = grad.icmc.usp.br)(PORT = 15215))
+   (CONNECT_DATA =
+     (SID = ORCL)
+   )
+)

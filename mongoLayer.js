@@ -1,3 +1,3 @@
-module.exports.mongo = {
+module.exports = {
 	//Functions to handle mongoDB
 };

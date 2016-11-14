@@ -1,4 +1,4 @@
-var orcl = require('oracle');
+var orcl = require('./oracleLayer');
 
 module.exports = function(app){
 
@@ -18,7 +18,8 @@ module.exports = function(app){
 	});
 
 	app.get('/get/tables', function(req, res){
-		var tables = [];
+		
+		/*var tables = [];
 
 		tables.push({name: "LE01", fk_flag : true, fk_array : ["LE02", "LE03"] } );
 		tables.push({name: "LE02", fk_flag : true, fk_array : ["LE03"] } );
@@ -26,6 +27,13 @@ module.exports = function(app){
 		tables.push({name: "LE04", fk_flag : false, fk_array : []});
 		tables.push({name: "LE05", fk_flag : false, fk_array : []});
 
-		res.status(200).json(tables);
+		res.status(200).json(tables);*/
+		orcl.getTables(req, function(err, data){	
+			if(err){
+				res.status(500).json(err);
+			} else {
+				res.status(200).json(data);
+			}
+		});
 	});
 }

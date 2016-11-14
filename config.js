@@ -1,15 +1,15 @@
-module.exports.config = {
+module.exports = {
 	port : 1337,
 	
 	mongo : {
-		user : "",
-		password : "",
-		url : ""
+		user : '',
+		password : '',
+		url : ''
 	},
 	
 	oracle : {
-		user : "",
-		password : "",
-		url : ""
+		user : '',
+		password: '',
+		connectString : 'icmc'
 	}
 };

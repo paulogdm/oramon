@@ -1,7 +1,7 @@
 // MODULES VARIABLES
 var express = require('express');
 var app = express();
-var config = require('./config').config;
+var config = require('./config');
 
 require('./routes')(app);
 
