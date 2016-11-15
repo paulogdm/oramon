@@ -1,52 +1,64 @@
-var tables = [];
-
-tables.push({name: "LE01", fk_flag : true, fk_array : ["LE02", "LE03"] } );
-tables.push({name: "LE02", fk_flag : true, fk_array : ["LE03"] } );
-tables.push({name: "LE03", fk_flag : true, fk_array : ["LE05"] } );
-tables.push({name: "LE04", fk_flag : false, fk_array : []});
-tables.push({name: "LE05", fk_flag : false, fk_array : []});
-
-table_names = [];
-
-var vtables = new Vue({
+new Vue({
 	//element of HTML, or id, to attach this
 	el: "#list-tables",
 
 	//data of vue 'class'
 	data: {
-		loading : true,
+		debug_mode: false, //flag to debug (show array and Vue data bindings)
 		tables: [], //array of tables
-		table_checked: [], //array of select checkbox
-		emb_checked: [] //array of select checkbox
+		loading : true //flag to show loading bar
+	},
+
+	// when the vue object is created, then run this.
+	created: function(){
+		this.fetchTables();
 	},
 
 	methods : {
 		fetchTables : function(){
-			this.$http.get('/get/tables').then(function(res){
+			
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", '/get/tables', false ); // false for synchronous request
+			xmlHttp.send( null );
+			this.tables = JSON.parse(xmlHttp.responseText);
 
-				this.tables = res.data;
-				this.loading = false;
+			for(idx in this.tables){
+				this.tables[idx].checked = true;
 
-				for (table in this.tables){ 
-					this.table_checked.push(this.tables[table].name);
+				if(this.tables[idx].fk_flag){
+					this.tables[idx].fk_array.unshift(" ");
+					this.tables[idx].fk_selected = " ";
 				}
+			}
 
-			})
+			this.loading = false;
+		},
+
+		submit : function(){
+			this.loading = true;
+			
+			var to_send = [];
+			
+			for(idx in this.tables){
+				
+				obj = this.tables[idx];
+
+				if(obj.checked){
+					to_send.push({name: obj.name, emb: null});
+					if(obj.fk_selected && obj.fk_selected != " "){
+						to_send[to_send.length - 1].emb = obj.fk_selected;
+					}
+				}
+			}
+
+
+			this.$http.post('/post/tomongo', to_send).then((res) => {
+
+			  res.status;
+
+			}, (res) => {
+			  // error callback
+			});
 		}
-	},
-
-	// when the vue object is created, then run this.
-	created: function() {
-		this.fetchTables();
 	}
 });
-
-//tables and infos
-/*
-	EXAMPLE:
-	table : {
-		name: "LE01ALGO",
-		fk_flag: true, 						//foreign key constraint?
-		fk_array: ["LE02AAA", "LE04BBBB"]	//wich tables?
-	}
-	*/

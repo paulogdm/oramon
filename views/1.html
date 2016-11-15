@@ -24,28 +24,22 @@
 				<tr>
 					<th class="mdl-data-table__cell--non-numeric">Select Tables</th>
 					<th class="mdl-data-table__cell--non-numeric">Table Name</th>
-					<th class="">Embedded</th>
-					<th>Table to Embedded</th>
+					<th class="mdl-data-table__cell--non-numeric">Table to Embedded</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="table in tables">
+				<tr v-for="table in tables" v-bind:key="table.name">
 					<td class="mdl-data-table__cell--non-numeric">
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-							<input type="checkbox" class="mdl-checkbox__input" v-bind:value="table.name" v-model="table_checked">
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" :for="table.name">
+							<input type="checkbox" class="mdl-checkbox__input" :id="table.name" v-model="table.checked">
 						</label>
 					</td>
 					<td class="mdl-data-table__cell--non-numeric">
 						{{table.name}}
 					</td>
-					<td>
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
-							<input type="checkbox" class="mdl-checkbox__input" v-bind:value="table.name" :disabled="!table.fk_flag" v-model="emb_checked">
-						</label>
-					</td>
-					<td>
-						<div class="" v-show=table.fk_flag>
-							<select :disabled="(-1 == emb_checked.indexOf(table.name))">
+					<td class="mdl-data-table__cell--non-numeric">
+						<div class="" v-show=table.fk_flag :disabled="!table.checked">
+							<select v-model="table.fk_selected">
 								<option v-for="option in table.fk_array">{{option}}</option>
 							</select>
 						</div>
@@ -53,9 +47,15 @@
 				</tr>
 			</tbody>
 		</table>
-		<button class="button-container mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+		<button class="button-container mdl-button mdl-js-button mdl-button--raised mdl-button--colored" v-on:click="submit">
 			Submit
 		</button>
+
+		<div v-show=debug_mode>
+			<span>
+				<h4>Tables:</h4> {{tables}}
+			</span>
+		</div>
 	</div>
 </body>
 
