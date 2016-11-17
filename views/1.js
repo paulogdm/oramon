@@ -44,9 +44,10 @@ new Vue({
 		},
 
 		fetchTables : function(){
+			this.loading = true;
 			
-			this.$http.get('/get/tables').then((res) => {
-
+			this.$http.get('/get/tables').
+			then((res) => {
 
 				for(idx in res.data){
 					res.data[idx].checked = false;
@@ -59,14 +60,13 @@ new Vue({
 					this.tables.push(res.data[idx]);
 				}
 
+			this.loading = false;
 
 			}, (res) => {
-			  // error callback
+				// error callback
+				this.loading = false;
 			});
 
-
-
-			this.loading = false;
 		},
 
 		submit : function(){

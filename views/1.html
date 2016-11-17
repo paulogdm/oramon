@@ -14,11 +14,17 @@
 
 <body>
 	<div class="card" id="list-tables">
-		<div v-show="loading" class=""></div>
+
 		
 		<span class="">
 			OracleDB table to mongoDB document.
 		</span>
+		
+		<div v-show="loading" class="spinner">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
 
 		<table class="	">
 			<thead>
@@ -52,7 +58,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<button class="button-container" v-on:click="submit">
+		<button class="button-container button" v-on:click="submit">
 			Submit
 		</button>
 
