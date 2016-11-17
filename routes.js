@@ -37,7 +37,7 @@ module.exports = function(app){
 		});
 	});
 
-	app.post('/post/tomongo' function(req, res){
+	// app.post('/post/tomongo' function(req, res){
 		
-	});
+	// });
 }

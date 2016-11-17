@@ -8,9 +8,9 @@ This is the final project of the discipline SCC0241 (Database Lab). Second half 
 
 ## Frameworks and libs
 
-Frontend: Vuejs + MDL (Material Design Lite)
+Frontend: Vuejs (JS) + Milligram (CSS)
 
-Backend: NodeJS + Express + 
+Backend: NodeJS (Server base) + Express (Routing) + OracleDB (Oracle Driver) + MongoDB (Mongo Driver) 
 
 
 ## Installation

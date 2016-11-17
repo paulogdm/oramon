@@ -5,7 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "express": "^4.14.0",
-    "material-design-lite": "^1.2.1",
+    "milligram": "^1.2.0",
     "mocha": "^3.1.2",
     "mongodb": "^2.2.11",
     "node": "^0.0.0",

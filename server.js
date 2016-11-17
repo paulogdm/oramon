@@ -8,8 +8,8 @@ require('./routes')(app);
 // Static url routing for libs
 app.use('/vue', express.static(__dirname + '/node_modules/vue/dist/'));
 app.use('/vueres', express.static(__dirname + '/node_modules/vue-resource/dist/'));
-app.use('/mdl', express.static(__dirname + '/views/'));
-app.use('/mdlscript', express.static(__dirname + '/node_modules/material-design-lite/'));
+app.use('/milligram', express.static(__dirname + '/node_modules/milligram/dist/'));
+app.use('/normalize', express.static(__dirname + '/node_modules/normalize.css/'));
 
 app.set('view engine', 'html');
 

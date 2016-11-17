@@ -1,43 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Oramon</title>
+	<title>Oramon 1</title>
 </head>
+
 <script src="/vue/vue.js"></script>
 <script src="/vueres/vue-resource.js"></script>
-<script src="/mdlscript/material.js"></script>
 
-<link rel="stylesheet" type="text/css" href="/mdl/material.min.css" media="screen" />
-
+<link rel="stylesheet" type="text/css" href="/milligram/milligram.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="/normalize/normalize.css" media="screen"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
 <link rel="stylesheet" type="text/css" href="/item/1.css" media="screen" />
 
 <body>
 	<div class="card" id="list-tables">
-		<div v-show="loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+		<div v-show="loading" class=""></div>
 		
-		<span class="mdl-textfield">
+		<span class="">
 			OracleDB table to mongoDB document.
 		</span>
 
-		<table class="table-container mdl-card--border mdl-data-table mdl-js-data-table mdl-js-data-table mdl-shadow--2dp">
+		<table class="	">
 			<thead>
 				<tr>
-					<th class="mdl-data-table__cell--non-numeric">Select Tables</th>
-					<th class="mdl-data-table__cell--non-numeric">Table Name</th>
-					<th class="mdl-data-table__cell--non-numeric">Table to Embedded</th>
+					<th class="">
+						<label class="" lass="">
+							<input type="checkbox" class="" @click="selectAll" :checked="allSelected">
+						</label>
+					</th>
+					<th class="">Table Name</th>
+					<th class="">Table to Embedded</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="table in tables" v-bind:key="table.name">
-					<td class="mdl-data-table__cell--non-numeric">
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" :for="table.name">
-							<input type="checkbox" class="mdl-checkbox__input" :id="table.name" v-model="table.checked">
+					<td class="">
+						<label class="" :for="table.name">
+							<input type="checkbox" class="" @click="check" v-model="table.checked">
 						</label>
 					</td>
-					<td class="mdl-data-table__cell--non-numeric">
+					<td class="">
 						{{table.name}}
 					</td>
-					<td class="mdl-data-table__cell--non-numeric">
+					<td class="">
 						<div class="" v-show=table.fk_flag :disabled="!table.checked">
 							<select v-model="table.fk_selected">
 								<option v-for="option in table.fk_array">{{option}}</option>
@@ -47,7 +52,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<button class="button-container mdl-button mdl-js-button mdl-button--raised mdl-button--colored" v-on:click="submit">
+		<button class="button-container" v-on:click="submit">
 			Submit
 		</button>
 
@@ -58,7 +63,6 @@
 		</div>
 	</div>
 </body>
-
 <script src="/item/1.js"></script>
 </html>
 

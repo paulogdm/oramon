@@ -14,22 +14,57 @@ new Vue({
 		this.fetchTables();
 	},
 
-	methods : {
-		fetchTables : function(){
-			
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open( "GET", '/get/tables', false ); // false for synchronous request
-			xmlHttp.send( null );
-			this.tables = JSON.parse(xmlHttp.responseText);
-
+	computed: {
+		allSelected : function(){
 			for(idx in this.tables){
-				this.tables[idx].checked = true;
-
-				if(this.tables[idx].fk_flag){
-					this.tables[idx].fk_array.unshift(" ");
-					this.tables[idx].fk_selected = " ";
+				if(this.tables[idx].checked == false){
+					return false;
 				}
 			}
+
+			return true;
+		},
+	},
+
+	methods : {
+
+			selectAll: function (task) {
+				var targetValue = this.allSelected ? false : true;
+				for (var i = 0; i < this.tables.length; i++) {
+					this.tables[i].checked = targetValue;
+				}
+		},
+
+		check : function(table){
+			table.checked = true;
+		},
+
+		isChecked : function(table){
+			return table.checked;
+		},
+
+		fetchTables : function(){
+			
+			this.$http.get('/get/tables').then((res) => {
+
+
+				for(idx in res.data){
+					res.data[idx].checked = false;
+
+					if(res.data[idx].fk_flag){
+						res.data[idx].fk_array.unshift(" ");
+						res.data[idx].fk_selected = " ";
+					}
+
+					this.tables.push(res.data[idx]);
+				}
+
+
+			}, (res) => {
+			  // error callback
+			});
+
+
 
 			this.loading = false;
 		},
