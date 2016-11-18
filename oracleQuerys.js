@@ -17,4 +17,23 @@ module.exports = {
 					\
 					ORDER BY CONS.TABLE_NAME, COLS.COLUMN_NAME",
 
+	getTablePK : function(tbname){
+					var query = "SELECT column_name FROM all_cons_columns WHERE constraint_name = (\
+						SELECT constraint_name FROM user_constraints \
+						WHERE UPPER(table_name) = UPPER('__TABLENAME__') AND CONSTRAINT_TYPE = 'P'";
+
+					query.replace("__TABLENAME__", tbname);
+
+					return query;
+	},
+	
+	getTable : function(tbname){
+		var query = "SELECT * FROM " + tbname.trim().toUpperCase();
+
+		return query;
+	},
+
+	getTableJoin : function(tbmain, tbjoin, params){
+		// this.getTable(tbmain) + " LEFT JOIN ON " + params.first + " = " params.second; 
+	}
 }

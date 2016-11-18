@@ -6,7 +6,10 @@ new Vue({
 	data: {
 		debug_mode: false, //flag to debug (show array and Vue data bindings)
 		tables: [], //array of tables
-		loading : true //flag to show loading bar
+		global_loading : true, //flag to show loading bar and disable submit button
+		submit_loading : false, //flag to show loading bar and disable submit button
+		error : false,
+		snackbar_msg : ""
 	},
 
 	// when the vue object is created, then run this.
@@ -24,15 +27,19 @@ new Vue({
 
 			return true;
 		},
+
+		showSnackbar : function(msg){
+			return(this.snackbar_msg.length > 0);
+		}
 	},
 
 	methods : {
 
-			selectAll: function (task) {
-				var targetValue = this.allSelected ? false : true;
-				for (var i = 0; i < this.tables.length; i++) {
-					this.tables[i].checked = targetValue;
-				}
+		selectAll: function (task) {
+			var targetValue = this.allSelected ? false : true;
+			for (var i = 0; i < this.tables.length; i++) {
+				this.tables[i].checked = targetValue;
+			}
 		},
 
 		check : function(table){
@@ -43,34 +50,42 @@ new Vue({
 			return table.checked;
 		},
 
+		setSnackbar : function(msg){
+			var self = this;
+			self.$set(self, 'snackbar_msg', msg);
+			setTimeout(function(){ self.$set(self, 'snackbar_msg', ''); }, 3000);
+		},
+
 		fetchTables : function(){
-			this.loading = true;
+			this.global_loading = true;
 			
-			this.$http.get('/get/tables').
-			then((res) => {
+			superagent.get('/get/tables').then((res) => {
+				console.info(res);
+				for(idx in res.body){
+					res.body[idx].checked = false;
 
-				for(idx in res.data){
-					res.data[idx].checked = false;
-
-					if(res.data[idx].fk_flag){
-						res.data[idx].fk_array.unshift(" ");
-						res.data[idx].fk_selected = " ";
+					if(res.body[idx].fk_flag){
+						res.body[idx].fk_array.unshift(" ");
+						res.body[idx].fk_selected = " ";
 					}
 
-					this.tables.push(res.data[idx]);
+					this.tables.push(res.body[idx]);
 				}
 
-			this.loading = false;
+				this.global_loading = false;
 
 			}, (res) => {
-				// error callback
-				this.loading = false;
+				this.global_loading = false;
+			  	this.error = true;
+
+			  	this.setSnackbar(res.body.err);
 			});
 
 		},
 
 		submit : function(){
-			this.loading = true;
+
+			this.submit_loading = true;
 			
 			var to_send = [];
 			
@@ -86,14 +101,19 @@ new Vue({
 				}
 			}
 
+			if(to_send.length == 0){
+				this.submit_loading = false;
+				this.setSnackbar("Nothing Selected...");
+			} else {
 
-			this.$http.post('/post/tomongo', to_send).then((res) => {
-
-			  res.status;
-
-			}, (res) => {
-			  // error callback
-			});
+				superagent.post('/post/tomongo')
+				.send(to_send)
+				.then((res) => {
+					this.submit_loading = false;
+				}, (res) => {
+					this.submit_loading = false;
+				});
+			}
 		}
 	}
 });

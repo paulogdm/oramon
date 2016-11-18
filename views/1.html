@@ -5,7 +5,7 @@
 </head>
 
 <script src="/vue/vue.js"></script>
-<script src="/vueres/vue-resource.js"></script>
+<script src="/superagent/superagent.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/milligram/milligram.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="/normalize/normalize.css" media="screen"/>
@@ -13,62 +13,70 @@
 <link rel="stylesheet" type="text/css" href="/item/1.css" media="screen" />
 
 <body>
-	<div class="card" id="list-tables">
+	<div id="list-tables">
 
-		
-		<span class="">
-			OracleDB table to mongoDB document.
-		</span>
-		
-		<div v-show="loading" class="spinner">
-			<div class="bounce1"></div>
-			<div class="bounce2"></div>
-			<div class="bounce3"></div>
-		</div>
-
-		<table class="	">
-			<thead>
-				<tr>
-					<th class="">
-						<label class="" lass="">
-							<input type="checkbox" class="" @click="selectAll" :checked="allSelected">
-						</label>
-					</th>
-					<th class="">Table Name</th>
-					<th class="">Table to Embedded</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="table in tables" v-bind:key="table.name">
-					<td class="">
-						<label class="" :for="table.name">
-							<input type="checkbox" class="" @click="check" v-model="table.checked">
-						</label>
-					</td>
-					<td class="">
-						{{table.name}}
-					</td>
-					<td class="">
-						<div class="" v-show=table.fk_flag :disabled="!table.checked">
-							<select v-model="table.fk_selected">
-								<option v-for="option in table.fk_array">{{option}}</option>
-							</select>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<button class="button-container button" v-on:click="submit">
-			Submit
-		</button>
-
-		<div v-show=debug_mode>
-			<span>
-				<h4>Tables:</h4> {{tables}}
+		<div class="card">		
+			<span class="">
+				OracleDB table to mongoDB document.
 			</span>
+
+			<div v-show="global_loading" class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+
+			<table class="	">
+				<thead>
+					<tr>
+						<th class="">
+							<label class="" lass="">
+								<input type="checkbox" class="" @click="selectAll" :checked="allSelected">
+							</label>
+						</th>
+						<th class="">Table Name</th>
+						<th class="">Table to Embedded</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="table in tables" v-bind:key="table.name">
+						<td class="">
+							<label class="" :for="table.name">
+								<input type="checkbox" class="" @click="check" v-model="table.checked">
+							</label>
+						</td>
+						<td class="">
+							{{table.name}}
+						</td>
+						<td class="">
+							<div class="" v-show=table.fk_flag :disabled="!table.checked">
+								<select v-model="table.fk_selected">
+									<option v-for="option in table.fk_array">{{option}}</option>
+								</select>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div v-show="submit_loading" class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+			<button class="button-container button" v-on:click="submit" :disabled="error || global_loading || submit_loading">
+				Submit
+			</button>
+
+			<div v-show=debug_mode>
+				<span>
+					<h4>Tables:</h4> {{tables}}
+				</span>
+			</div>
 		</div>
+		<div id="snackbar" v-bind:class="{show: showSnackbar}">{{snackbar_msg}}</div>
 	</div>
 </body>
+
 <script src="/item/1.js"></script>
 </html>
 
