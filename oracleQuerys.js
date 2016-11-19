@@ -1,6 +1,6 @@
 module.exports = {
 	getTables : "SELECT table_name name FROM user_tables where table_name like 'LE%'",
-	getTablesAux : "SELECT \
+	getTablesFK : "SELECT \
 				    CONS.TABLE_NAME NAME, \
 				    CONS_R.TABLE_NAME FK_TABLE, \
 				    CONS.CONSTRAINT_NAME, \
@@ -18,11 +18,9 @@ module.exports = {
 					ORDER BY CONS.TABLE_NAME, COLS.COLUMN_NAME",
 
 	getTablePK : function(tbname){
-					var query = "SELECT column_name FROM all_cons_columns WHERE constraint_name = (\
+					var query = "SELECT column_name PK FROM all_cons_columns WHERE constraint_name = (\
 						SELECT constraint_name FROM user_constraints \
-						WHERE UPPER(table_name) = UPPER('__TABLENAME__') AND CONSTRAINT_TYPE = 'P'";
-
-					query.replace("__TABLENAME__", tbname);
+						WHERE UPPER(table_name) = UPPER('"+tbname.trim().toUpperCase()+"') AND CONSTRAINT_TYPE = 'P')";
 
 					return query;
 	},

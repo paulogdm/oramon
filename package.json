@@ -4,8 +4,10 @@
   "description": "nil",
   "main": "main.js",
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "json-stable-stringify": "^1.0.1",
     "milligram": "^1.2.0",
     "mocha": "^3.1.2",
     "mongodb": "^2.2.11",

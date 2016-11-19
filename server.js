@@ -14,7 +14,7 @@ app.use('/normalize', express.static(__dirname + '/node_modules/normalize.css/')
 app.set('view engine', 'html');
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: true}));
 
 //loading routes
 require('./routes')(app);
