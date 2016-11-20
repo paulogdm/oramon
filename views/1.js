@@ -4,12 +4,12 @@ new Vue({
 
 	//data of vue 'class'
 	data: {
-		debug_mode: false, //flag to debug (show array and Vue data bindings)
 		tables: [], //array of tables
 		global_loading : true, //flag to show loading bar and disable submit button
 		submit_loading : false, //flag to show loading bar and disable submit button
 		error : false,
-		snackbar_msg : ""
+		snackbar_msg : "",
+		received_msg : ""
 	},
 
 	// when the vue object is created, then run this.
@@ -30,7 +30,11 @@ new Vue({
 
 		showSnackbar : function(msg){
 			return(this.snackbar_msg.length > 0);
-		}
+		},
+
+		showTxt : function(){
+			return(this.received_msg != '')
+		},
 	},
 
 	methods : {
@@ -60,7 +64,6 @@ new Vue({
 			this.global_loading = true;
 			
 			superagent.get('/get/tables').then((res) => {
-				console.info(res);
 				for(idx in res.body){
 					res.body[idx].checked = false;
 
@@ -81,6 +84,10 @@ new Vue({
 			  	this.setSnackbar(res.body.err);
 			});
 
+		},
+
+		close : function(){
+			this.$set(this, 'received_msg', '');
 		},
 
 		submit : function(){
@@ -105,11 +112,12 @@ new Vue({
 				this.submit_loading = false;
 				this.setSnackbar("Nothing Selected...");
 			} else {
-
+				
 				superagent.post('/post/tomongo')
 				.send(to_send)
 				.then((res) => {
 					this.submit_loading = false;
+					this.$set(this, 'received_msg', res.body.join('\n'));
 				}, (res) => {
 					this.submit_loading = false;
 				});

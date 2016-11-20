@@ -13,8 +13,7 @@
 <link rel="stylesheet" type="text/css" href="/item/1.css" media="screen" />
 
 <body>
-	<div id="list-tables">
-
+	<div id="list-tables" class="global-container" style="text-align: center">
 		<div class="card">		
 			<span class="">
 				OracleDB table to mongoDB document.
@@ -66,12 +65,14 @@
 			<button class="button-container button" v-on:click="submit" :disabled="error || global_loading || submit_loading">
 				Submit
 			</button>
-
-			<div v-show=debug_mode>
-				<span>
-					<h4>Tables:</h4> {{tables}}
-				</span>
-			</div>
+		</div>
+		<div class="card" style="width: 100rem" v-show="showTxt">
+			<button class="button-container button" v-show="showTxt" v-on:click="close" style="width: 100%">
+				Close
+			</button>
+			<textarea readonly wrap="hard" class="txt-card">
+				{{received_msg}}
+			</textarea>
 		</div>
 		<div id="snackbar" v-bind:class="{show: showSnackbar}">{{snackbar_msg}}</div>
 	</div>

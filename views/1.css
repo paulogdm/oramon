@@ -19,6 +19,21 @@ body {
   color: #21D19F;
 }
 
+.global-container {
+  margin: 1rem;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.txt-card {
+  width:100%;
+  height:90%; 
+  box-sizing: border-box;         /* For IE and modern versions of Chrome */
+  -moz-box-sizing: border-box;    /* For Firefox                          */
+  -webkit-box-sizing: border-box; /* For Safari                           */
+  resize: none;
+}
+
 .card {
   box-shadow: 3px 3px 5px 0px rgba(50, 50, 50, 0.81);
   margin: 1rem;
