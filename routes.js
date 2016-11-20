@@ -37,4 +37,14 @@ module.exports = function(app){
 			}
 		});
 	});
+
+	app.post('/post/mongoindex', function(req, res){
+		blender.mongoindex(req, function(err, data){
+			if(err){
+				res.status(500).json(err);
+			} else {
+				res.status(200).json(data);
+			}
+		});
+	});
 }

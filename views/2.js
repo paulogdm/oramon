@@ -1,5 +1,4 @@
-var GET_DATA_URL = '/get/tables';
-var POST_DATA_URL = '/post/tomongo';
+var POST_DATA_URL = '/post/mongoindex';
 
 new Vue({
 	//element of HTML, or id, to attach this
@@ -66,7 +65,7 @@ new Vue({
 		fetchTables : function(){
 			this.global_loading = true;
 			
-			superagent.get(GET_DATA_URL).then((res) => {
+			superagent.get('/get/tables').then((res) => {
 				for(idx in res.body){
 					res.body[idx].checked = false;
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Oramon 3</title>
+</head>
+<body>
+db.runCommand( {
+   collMod: "LE01ESTADO",
+   validator: { $or: [ { Sigla: { $exists: true } }, { Nome: { $exists: true } } ] },
+   validationLevel: "moderate"
+} )
+db.runCommand( {
+   collMod: "LE02CIDADE",
+   validator: { $or: [ { Nome: { $exists: true } }, { SiglaEstado: { $exists: true } }, { Populacao: { $exists: true } }, 
+   { Populacao: { $gte: 0 } ] },
+   validationLevel: "moderate"
+} )
+db.runCommand( {
+   collMod: "LE05URNA",
+   validator: { $or: [ { NSerial: { $exists: true } }, { Estado: { $in: [ "funcional", "manutencao" ] } } ] },
+   validationLevel: "moderate"
+} )
+</body>
+</html>

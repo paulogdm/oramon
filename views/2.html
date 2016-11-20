@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Oramon 2</title>
+</head>
+
+<script src="/vue/vue.js"></script>
+<script src="/superagent/superagent.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/milligram/milligram.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="/normalize/normalize.css" media="screen"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+<link rel="stylesheet" type="text/css" href="/item/1.css" media="screen" />
+
+<body>
+	<div id="list-tables" class="global-container" style="text-align: center">
+		<div class="card">		
+			<span class="">
+				OracleDB table to mongoDB document.
+			</span>
+
+			<div v-show="global_loading" class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+
+			<table class="	">
+				<thead>
+					<tr>
+						<th class="">
+							<label class="" lass="">
+								<input type="checkbox" class="" @click="selectAll" :checked="allSelected">
+							</label>
+						</th>
+						<th class="">Table Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="table in tables" v-bind:key="table.name">
+						<td class="">
+							<label class="" :for="table.name">
+								<input type="checkbox" class="" @click="check" v-model="table.checked">
+							</label>
+						</td>
+						<td class="">
+							{{table.name}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div v-show="submit_loading" class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+			<button class="button-container button" v-on:click="submit" :disabled="error || global_loading || submit_loading">
+				Submit
+			</button>
+		</div>
+		<div class="card" style="width: 100rem" v-show="showTxt">
+			<button class="button-container button" v-show="showTxt" v-on:click="close" style="width: 100%">
+				Close
+			</button>
+			<textarea readonly wrap="hard" class="txt-card">
+				{{received_msg}}
+			</textarea>
+		</div>
+		<div id="snackbar" v-bind:class="{show: showSnackbar}">{{snackbar_msg}}</div>
+	</div>
+</body>
+
+<script src="/item/2.js"></script>
+</html>
