@@ -47,8 +47,32 @@ module.exports = {
 
 	},
 
-	getTableJoin : function(tbmain, tbjoin, params){
-		// this.getTable(tbmain) + " LEFT JOIN ON " + params.first + " = " params.second; 
+	getTableFK2 : function(tbname, tbtarget){
+		return ("SELECT \
+		CONS.TABLE_NAME NAME, \
+		COLS.COLUMN_NAME COL, \
+		CONS_R.TABLE_NAME FK_TABLE, \
+		COLS_R.COLUMN_NAME FK_COL \
+		\
+		FROM USER_CONSTRAINTS CONS \
+		LEFT JOIN USER_CONS_COLUMNS COLS ON COLS.CONSTRAINT_NAME = CONS.CONSTRAINT_NAME \
+		LEFT JOIN USER_CONSTRAINTS CONS_R ON CONS_R.CONSTRAINT_NAME = CONS.R_CONSTRAINT_NAME \
+		LEFT JOIN USER_CONS_COLUMNS COLS_R ON COLS_R.CONSTRAINT_NAME = CONS.R_CONSTRAINT_NAME \
+		\
+		WHERE CONS.CONSTRAINT_TYPE = 'R' AND CONS.TABLE_NAME = '"+tbname+"' AND CONS_R.TABLE_NAME='"+tbtarget+"'");
+
+	},
+	getTableJoin : function(tbmain, tbjoin, tbmain_fields, tbjoin_fields){
+		tbjoin_fields = tbjoin_fields.map(function(el){
+			return tbjoin + '.' + el;
+		});
+
+		tbmain_fields = tbmain_fields.map(function(el){
+			return tbmain + '.' + el;
+		});
+		
+		return (module.exports.getTable(tbmain) + " LEFT JOIN "+tbjoin+" ON ("
+		+ tbmain_fields.join(',') + ") = ("+ tbjoin_fields.join(','));
 	},
 
 	getTableSk : function(tbname){

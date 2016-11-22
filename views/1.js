@@ -104,10 +104,7 @@ new Vue({
 				obj = this.tables[idx];
 
 				if(obj.checked){
-					to_send.push({name: obj.name, emb: null});
-					if(obj.fk_selected && obj.fk_selected != " "){
-						to_send[to_send.length - 1].emb = obj.fk_selected;
-					}
+					to_send.push({name: obj.name, emb: (obj.fk_selected)  ? obj.fk_selected : null});
 				}
 			}
 

@@ -38,62 +38,108 @@ module.exports = {
 
 		//processing each table in serial order
 		_.each(tables, function(table){
+			
 			//first string must be the createCollection of the doc
 			result.push('db.createCollection("'+table.name+'")');
+			console.info(table);
 
-			//vars returned by Oracle
-			var dataTable = null;
-			var dataTablePK = null;
-			var dataTableFK = null;
+			if(table.emb.trim()){
+				module.exports.pipelineEmb(table, function(err, data){
+					result = result.concat(data);
+					chunkDone();					
+				});				
+			} else {
+				module.exports.pipeline(table, function(err, data){
+					result = result.concat(data);
+					chunkDone();
+				});
+			}
+		});
 
-			//AFTER N CALLs (1st param), execute function (2nd param)
-			var queryDone = _.after(3, pipeline);
+	},
 
+	pipelineEmb : function(table, cb){
+		var result = [];
+		var dataTableFK = null;
+
+		var queryDone = _.after(1, pipeline);
+
+		//pipeline of table processing...
+		// PREPROCESSOR => PKPROCESSOR => LINKPROCESSOR => POSTPROCESSOR
+		// PREPROCESSOR: Conver rows and metadata retrieved from Oracle into Obj[key] = value type;
+		// PKPROCESSOR: Attach values to _id.
+		// LINKPROCESSOR: Deal with embedding and linking.
+		// POSTPROCESSOR: Removing null and other fields.
+		function pipeline(){
 			
-			//pipeline of table processing...
-			// PREPROCESSOR => LINKPROCESSOR => PKPROCESSOR => POSTPROCESSOR
-			// PREPROCESSOR: Conver rows and metadata retrieved from Oracle into Obj[key] = value type;
-			// LINKPROCESSOR: Deal with embedding and linking.
-			// PKPROCESSOR: Attach values to _id.
-			// POSTPROCESSOR: Removing null and other fields.
-			function pipeline(){
-				module.exports.preProcessor(dataTable, function(objectTable){
-					module.exports.linkProcessor(objectTable, dataTableFK, function(objectTable){
-						module.exports.pkProcessor(objectTable, dataTablePK, function(objectTable){
-							module.exports.postProcessor(objectTable, function(final){
-								_.each(final, function(array){
-									result.push('db.'+table.name +'.insert('+ stringify(array) + ')');
-								});
-								result.push('');
-								chunkDone();
+		}
+
+		orcl.getTableFK2(table.name, table.emb, function(err, result){
+			dataTableFK = result;
+			console.info(result);
+			queryDone();
+		});
+
+		// orcl.getTableJoin(table.name, function(err, result){
+		// 	dataTable = result;
+		// 	queryDone();
+		// });
+	},
+
+	pipeline : function(table, cb){
+		var result = [];
+
+		//vars returned by Oracle
+		var dataTable = null;
+		var dataTablePK = null;
+		var dataTableFK = null;
+
+		//AFTER N CALLs (1st param), execute function (2nd param)
+		var queryDone = _.after(3, pipeline);
+
+		
+		//pipeline of table processing...
+		// PREPROCESSOR => PKPROCESSOR => LINKPROCESSOR => POSTPROCESSOR
+		// PREPROCESSOR: Conver rows and metadata retrieved from Oracle into Obj[key] = value type;
+		// PKPROCESSOR: Attach values to _id.
+		// LINKPROCESSOR: Deal with embedding and linking.
+		// POSTPROCESSOR: Removing null and other fields.
+		function pipeline(){
+			module.exports.preProcessor(dataTable, function(objectTable){
+				module.exports.pkProcessor(objectTable, dataTablePK, function(objectTable){
+					module.exports.linkProcessor(objectTable, dataTablePK, dataTableFK, function(objectTable){
+						module.exports.postProcessor(objectTable, function(final){
+							_.each(final, function(array){
+								result.push('db.'+table.name +'.insert('+ stringify(array) + ')');
 							});
+
+							result.push('');
+							cb(null, result);
 						});
 					});
 				});
-
-			}
-
-			//Get all table rows (with join if needed)
-			orcl.getTable(table.name, function(err, result){
-				dataTable = result;
-				queryDone();
 			});
 
-			//Get all table PK names
-			orcl.getTablePK(table.name, function(err, result){
-				dataTablePK = result;
-				queryDone();
-			});
+		}
 
-
-			//Get all table FK names
-			orcl.getTableFK(table.name, function(err, result){
-				dataTableFK = result;
-				queryDone();
-			});
-
+		//Get all table rows (with join if needed)
+		orcl.getTable(table.name, function(err, result){
+			dataTable = result;
+			queryDone();
 		});
 
+		//Get all table PK names
+		orcl.getTablePK(table.name, function(err, result){
+			dataTablePK = result;
+			queryDone();
+		});
+
+
+		//Get all table FK names
+		orcl.getTableFK(table.name, function(err, result){
+			dataTableFK = result;
+			queryDone();
+		});
 	},
 
 	preProcessor : function(table_data, cb){
@@ -114,9 +160,11 @@ module.exports = {
 		});
 	},
 
-	linkProcessor : function(table_obj, table_fk, cb){
+	linkProcessor : function(table_obj, table_pk, table_fk, cb){
 
 		var link_names = {};
+		var pk_names = _.flatten(table_pk.rows);
+		
 		/*
 		INPUT
 		[ [ 'LE04BAIRRO', 'NOMECIDADE', 'LE02CIDADE', 'NOME' ],
@@ -125,17 +173,19 @@ module.exports = {
 		  [ 'LE04BAIRRO', 'SIGLAESTADO', 'LE02CIDADE', 'SIGLAESTADO' ],
 		  [ 'LE04BAIRRO', 'SIGLAESTADO', 'LE02CIDADE', 'NOME' ] ],
 		*/
-
 		_.each(table_fk.rows, function(row){
 			
 			var key = row[2] + '_id';
 			var value = row[1];
 
-			if(link_names[key] && link_names[key].indexOf(value) == -1){
-				link_names[key].push(value);
-			} else {
-				link_names[key] = []
-				link_names[key].push(value);
+			//if processed by PKPROCESSOR, skip
+			if(pk_names.indexOf(value) == -1){	
+				if(link_names[key] && link_names[key].indexOf(value) == -1){
+					link_names[key].push(value);
+				} else {
+					link_names[key] = []
+					link_names[key].push(value);
+				}
 			}
 		});
 
