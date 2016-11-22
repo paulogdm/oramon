@@ -15,6 +15,7 @@
     "pug": "^2.0.0-beta6",
     "superagent": "^2.3.0",
     "underscore": "^1.8.3",
+    "underscore-node": "^0.1.2",
     "vue": "^2.0.3",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.2"
