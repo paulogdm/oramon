@@ -2,6 +2,10 @@
 
 mondata/*
 
+# exception to the rule
+!mondata/.gitkeep
+!mondata/.gitignore
+
 # Logs
 logs
 *.log
