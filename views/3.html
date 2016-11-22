@@ -6,21 +6,170 @@
 <body>
 db.runCommand( {
    collMod: "LE01ESTADO",
-   validator: { $or: [ { Sigla: { $exists: true } }, { Nome: { $exists: true } } ] },
-   validationLevel: "moderate"
+   validator: { 
+   $and: [ { Sigla: { $exists: true } }, 
+         { Nome: { $exists: true } } 
+   ] }
 } )
 <br>
+
 db.runCommand( {
    collMod: "LE02CIDADE",
-   validator: { $or: [ { Nome: { $exists: true } }, { SiglaEstado: { $exists: true } }, { Populacao: { $exists: true } }, 
-   { Populacao: { $gte: 0 } ] },
-   validationLevel: "moderate"
+   validator: { 
+   $and: [ { Nome: { $exists: true } }, 
+         { SiglaEstado: { $exists: true } }, 
+         { Populacao: { $exists: true } },
+         { Populacao: { $gte: 0 } }
+   ] }
 } )
 <br>
+
+db.runCommand( {
+   collMod: "LE03ZONA",
+   validator: { 
+   $and: [ { NroZona: { $exists: true } }, 
+         { NroDeUrnasReservas: { $exists: true } } 
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE04BAIRRO",
+   validator: { 
+   $and: [ { Nome: { $exists: true } }, 
+         { NomeCidade: { $exists: true } }, 
+         { SiglaEstado: { $exists: true } } 
+   ] }
+} )
+<br>
+
 db.runCommand( {
    collMod: "LE05URNA",
-   validator: { $or: [ { NSerial: { $exists: true } }, { Estado: { $in: [ "funcional", "manutencao" ] } } ] },
-   validationLevel: "moderate"
+   validator: { 
+   $and: [ { NSerial: { $exists: true } }, 
+         { Estado: { $in: [ "funcional", "manutencao" ] } } 
+   ] }
 } )
+<br>
+
+db.runCommand( {
+   collMod: "LE06SESSAO",
+   validator: { 
+   $and: [ { NroSessao: { $exists: true } }, 
+         { NSerial: { $exists: true } } 
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE07PARTIDO",
+   validator: { 
+   $and: [ { Sigla: { $exists: true } }, 
+         { Nome: { $exists: true } } 
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE08CANDIDATO",
+   validator: { 
+   $and:[ { NroCand: { $exists: true } }, 
+         { Tipo: { $exists: true } }, 
+         { Nome: { $exists: true } }, 
+         { $or: [ 
+            { $and: [ { Tipo: { $eq: "politico" } }, 
+                  { SiglaPartido: { $exists: true } }, 
+                  { CPF: { $exists: true } } 
+            ] }, 
+            { $and: [ { Tipo: { $eq: "especial" } } , 
+                  { SiglaPartido: { $exists: false } }, 
+                  { CPF: { $exists: false } },
+                  { Idade: { $exists: false } },
+                  { Apelido: { $exists: false } } 
+            ] } 
+         ] }
+      ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE09CARGO",
+   validator: { 
+   $and: [ { CodCargo: { $exists: true } }, 
+         { PossuiVice: { $exists: true } },
+         { AnoBase: { $exists: true } },
+         { AnosMandato: { $exists: true } },
+         { NomeDescritivo: { $exists: true } },       
+         { NroDeCadeiras: { $exists: true } },
+         { Esfera: { $exists: true } },
+         { NroDeCadeiras: { $gt: 0 } },
+         { AnosMandato: { $gt: 0 } },
+         { $and: [ { AnoBase: { $gte: 1985 } }, { AnoBase: { $lte: 2100} } ] },
+         { PossuiVice: { $in: [ 0, 1 ] } },
+         { Esfera: { $in: [ "F", "E", "M" ] } },
+         { $or: [
+            { $and: [ { Esfera: { $eq: "F" } },
+                  { NomeCidade: { $exists: false } },
+                  { SiglaEstado: { $exists: false } }
+            ] },
+            { $and: [ { Esfera: { $eq: "E" } },
+                  { NomeCidade: { $exists: false } },
+                  { SiglaEstado: { $exists: true } }
+            ] },
+            { $and: [ { Esfera: { $eq: "M" } },
+                  { NomeCidade: { $exists: true } },
+                  { SiglaEstado: { $exists: true } }
+            ] }
+         ] }
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE10CANDIDATURA",
+   validator: { 
+   $and: [ { Reg: { $exists: true } }, 
+         { CodCargo: { $exists: true } },
+         { Ano: { $exists: true } },
+         { NroCand: { $exists: true } },
+         { $and: [ { Ano: { $gte: 1985 } }, { Ano: { $lte: 2100} } ] }
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE11PLEITO",
+   validator: { 
+   $and: [ { NroSessao: { $exists: true } }, 
+         { NroZona: { $exists: true } },
+         { CodCargo: { $exists: true } },
+         { Ano: { $exists: true } },
+         { NroCand: { $exists: true } },
+         { Total: { $exists: true } }
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE12PESQUISA",
+   validator: { 
+   $and: [ { RegPesquisa: { $exists: true } }, 
+         { PeriodoInicio: { $exists: true } },
+         { PeriodoFim: { $exists: true } }
+
+   ] }
+} )
+<br>
+
+db.runCommand( {
+   collMod: "LE13INTENCAODEVOTO",
+   validator: { 
+   $and: [ { RegPesquisa: { $exists: true } }, 
+         { RegCandid: { $exists: true } },
+         { Total: { $exists: true } }
+   ] }
+} )
+<br>
+
 </body>
 </html>

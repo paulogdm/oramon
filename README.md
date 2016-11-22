@@ -11,6 +11,12 @@ This is the final project of the discipline SCC0241 (Database Lab). Second half 
 Frontend: Vuejs (JS) + Milligram (CSS)
 
 Backend: NodeJS (Server base) + Express (Routing) + OracleDB (Oracle Driver) + MongoDB (Mongo Driver) 
+Backend Data Processing: UNDERSCORE (Serial util lib) + ASYNC (Async util lib);
+
+
+## Configuration
+	
+Complete your user information on "config.js" 
 
 
 ## Installation
@@ -40,7 +46,19 @@ http://stackoverflow.com/questions/5809195/installing-oracle-instant-client
 
 2. Extract and copy all zips to /opt/oracle, you may need to create the dir "oracle".
 
-3. Run install.sh
+3. Run 
+ ```
+cd /opt/oracle/instantclient_12_1
+ln -s libclntsh.so.12.1 libclntsh.so
+ln -s libocci.so.12.1 libocci.so'
+```
+
+
+4. Run install.sh
+
+
+5. DONE!
+
 
 ####Alternative #2 (DIY):
 
