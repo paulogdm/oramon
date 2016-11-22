@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Oramon 4</title>
+</head>
+
+<script src="/vue/vue.js"></script>
+<script src="/superagent/superagent.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/milligram/milligram.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="/normalize/normalize.css" media="screen"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+<link rel="stylesheet" type="text/css" href="/item/4.css" media="screen" />
+
+
+<body>
+	<!-- item template -->
+	<script type="text/x-template" id="item-template">
+		<li>
+			<div :class="[ isGroup ? 'group' : 'rule' ]">
+				<div class="group-header" v-if="isGroup" >
+					<button v-on:click="toggleAndOr" class="button mini-button" :class="[ and ? 'button-and' : 'button-or']">{{ and ? 'AND' : 'OR'}}</button>
+
+					<button class="button button-green button-outline mini-button" v-on:click="addGroup">+ GROUP</button>
+					<button class="button button-green button-outline mini-button" v-on:click="addRule" >+ RULE</button>
+					<button v-if="isRoot" class="button button-del button-outline mini-button" v-on:click="clear" >CLEAR</button>
+					<button v-if="!isRoot" class="button button-del button-outline mini-button" v-on:click="suicideGroup" >REMOVE</button>
+				</div>
+				
+				<ul v-if="isGroup">
+					<item class="item" v-for="model in model.children" :model="model">
+					</item>
+				</ul>
+
+
+				<div class="container" v-if="!isGroup">
+					<div class="row">
+						<div class="column">
+							<input type="text" name="" class="select-limit" v-model="field_selected" placeholder="Field name">
+						</div>
+						<div class="column">
+							<select v-model="operand_selected">
+								<option v-for="operand in operands">{{operand}}</option>
+							</select>
+						</div>
+						<div class="column">
+							<input type="text" name="" v-model="field_value" placeholder="Value">
+						</div>
+						<div class="column">
+							<button class="button button-del button-outline mini-button" v-on:click="suicideRule" style="float: right;">REMOVE</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+	</script>
+
+	<div id="main" class="container">
+		<div class="card">
+			<div>
+				<h4>MongoDB query builder</h4>
+			</div>
+			<select v-model="table_selected" style="margin-bottom: 20px">
+				<option v-for="(value, key) in tables">{{key}}</option>
+			</select>
+			Fields available: {{selectedTableFields.join(', ')}}.
+			
+			<ul v-if="table_selected">
+				<item class="item" :model="treeData" style="text-align: left;">
+				</item>
+			</ul>
+			<div v-show="loading" class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+			<button class="button button-green" v-on:click="submit">Send</button>
+		</div>
+
+		<div class="card">
+			<textarea readonly wrap="hard" class="txt-card">{{answer}}</textarea>
+		</div>
+		<div id="snackbar" v-bind:class="{show: showSnackbar}">{{snackbar_msg}}</div>
+	</div>
+
+
+</body>
+<script src="/item/4.js"></script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

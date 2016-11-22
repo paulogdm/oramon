@@ -183,5 +183,33 @@ module.exports = {
 
 	getTableJoin : function(data, cb){
 
+	},
+
+	getTableSk : function(tbname, cb){
+		var to_send = [];
+
+		oracledb.getConnection(config, function(err, conn){
+			if(err){
+				console.info('[oracleLayer.js] Error connecting to OracleDB')
+				console.info(err);
+
+				cb({err: 'Error connecting to OracleDB.'}, null);
+
+			} else {
+				conn.execute(oracleqrs.getTableSk(tbname), {}, {}, function(err, result){
+					if(err){
+						console.info('[oracleLayer.js] Query error!' + err);
+						
+						cb({err: 'Query error'}, null);
+
+					} else {
+						cb(null, result);
+					}
+
+					finish(conn);
+				});
+			}
+		})
 	}
+
 };

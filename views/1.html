@@ -15,9 +15,7 @@
 <body>
 	<div id="list-tables" class="global-container" style="text-align: center">
 		<div class="card">		
-			<span class="">
-				OracleDB table to mongoDB document.
-			</span>
+			<span class="">OracleDB table to mongoDB document.</span>
 
 			<div v-show="global_loading" class="spinner">
 				<div class="bounce1"></div>
@@ -70,9 +68,7 @@
 			<button class="button-container button" v-show="showTxt" v-on:click="close" style="width: 100%">
 				Close
 			</button>
-			<textarea readonly wrap="hard" class="txt-card">
-				{{received_msg}}
-			</textarea>
+			<textarea readonly wrap="hard" class="txt-card">{{received_msg}}</textarea>
 		</div>
 		<div id="snackbar" v-bind:class="{show: showSnackbar}">{{snackbar_msg}}</div>
 	</div>

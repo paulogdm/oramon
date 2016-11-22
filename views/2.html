@@ -62,9 +62,7 @@
 			<button class="button-container button" v-show="showTxt" v-on:click="close" style="width: 100%">
 				Close
 			</button>
-			<textarea readonly wrap="hard" class="txt-card">
-				{{received_msg}}
-			</textarea>
+			<textarea readonly wrap="hard" class="txt-card">{{received_msg}}</textarea>
 		</div>
 		<div id="snackbar" v-bind:class="{show: showSnackbar}">{{snackbar_msg}}</div>
 	</div>

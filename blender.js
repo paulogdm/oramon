@@ -4,43 +4,67 @@ var async = require('async'); 		// ASYNC lib, clean lib to improve speedup
 var stringify = require('json-stable-stringify'); // Stringfy JSON
 
 // My libs
-var orcl = require('./oracleLayer');
+var orcl = require('./oracleLayer'); // Oracle queries
 
-
-var DB_PREFIX = 'db';
-
+/**
+ * Module description: This module links Oracle and MongoDB functions.
+ * Roles: 	* Process incoming request
+ * 			* Call Oracle query and compute it.
+ * 			* Response with MongoDB strings.
+ */
 
 module.exports = {
+	/**
+	 * Converts an Oracle Table to a MongoDoc.
+	 * @param  {request by Express}   	req
+	 * @param  {callback by Express} 	cb
+	 */
 	tableToMongo : function(req, cb){
-		var tables = req.body;
-		var result = [];
 
+		//initial declare
+		var tables = req.body; //request body
+		var result = []; //array of strings result
+
+		//Sort request body (first come first served)
 		tables.sort(function(a,b){return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
 
+		//AFTER N CALLs (1st param), execute function (2nd param)
 		var chunkDone = _.after(tables.length, send);
 		
+		//function to send the results;
 		function send(){
 			cb(null, result);
 		}
 
+		//processing each table in serial order
 		_.each(tables, function(table){
-			result.push(DB_PREFIX + '.createCollection("'+table.name+'")');
+			//first string must be the createCollection of the doc
+			result.push('db.createCollection("'+table.name+'")');
 
+			//vars returned by Oracle
 			var dataTable = null;
 			var dataTablePK = null;
 			var dataTableFK = null;
 
+			//AFTER N CALLs (1st param), execute function (2nd param)
 			var queryDone = _.after(3, pipeline);
 
+			
+			//pipeline of table processing...
+			// PREPROCESSOR => LINKPROCESSOR => PKPROCESSOR => POSTPROCESSOR
+			// PREPROCESSOR: Conver rows and metadata retrieved from Oracle into Obj[key] = value type;
+			// LINKPROCESSOR: Deal with embedding and linking.
+			// PKPROCESSOR: Attach values to _id.
+			// POSTPROCESSOR: Removing null and other fields.
 			function pipeline(){
 				module.exports.preProcessor(dataTable, function(objectTable){
 					module.exports.linkProcessor(objectTable, dataTableFK, function(objectTable){
 						module.exports.pkProcessor(objectTable, dataTablePK, function(objectTable){
 							module.exports.postProcessor(objectTable, function(final){
 								_.each(final, function(array){
-									result.push(DB_PREFIX +'.'+table.name +'.insert('+ stringify(array) + ')');
+									result.push('db.'+table.name +'.insert('+ stringify(array) + ')');
 								});
-								resul.push('');
+								result.push('');
 								chunkDone();
 							});
 						});
@@ -49,17 +73,20 @@ module.exports = {
 
 			}
 
+			//Get all table rows (with join if needed)
 			orcl.getTable(table.name, function(err, result){
 				dataTable = result;
 				queryDone();
 			});
 
+			//Get all table PK names
 			orcl.getTablePK(table.name, function(err, result){
 				dataTablePK = result;
 				queryDone();
 			});
 
 
+			//Get all table FK names
 			orcl.getTableFK(table.name, function(err, result){
 				dataTableFK = result;
 				queryDone();
@@ -143,6 +170,12 @@ module.exports = {
 
 	},
 	
+	/**
+	 * Functoin that specifies and process the _id of mongodb.
+	 * @param  {array of obj}   	table_obj => array of row in object notation
+	 * @param  {array of strings}   table_pk  => names of PK columns
+	 * @param  {callback(result)} 	cb        => callback to return the result
+	 */
 	pkProcessor : function(table_obj, table_pk, cb){
 
 		var pk_names = _.flatten(table_pk.rows);
@@ -169,8 +202,13 @@ module.exports = {
 			cb(table_obj);
 		});
 
-	}, 
+	},
 
+	/**
+	 * After all rows have been processed, you can evaluete the js obj here
+	 * @param  {array of obj}   	table_obj => array of row in object notation
+	 * @param  {callback(result)} 	cb        => callback to return the result
+	 */
 	postProcessor : function(table_obj, cb){
 
 		async.each(table_obj, function(row, cb1){
@@ -190,5 +228,44 @@ module.exports = {
 		}, function(err){
 			cb(table_obj);
 		});
-	}	
+	},
+
+	mongoIndex : function(req, cb){
+
+		var result = [];
+		var tables = req.body;
+
+		async.each(tables, function(table, callback){
+
+			var string = 'db.' + table.name + '.createIndex(';
+			var obj = {_id: 1};
+
+			orcl.getTableSk(table.name, function(err, queryresult){
+				if(err){
+					callback(err);
+				} else {
+					var temp = _.compact(_.flatten(queryresult.rows));
+
+					//LODASH.js here?
+					_.each(temp, function(str){
+						obj[str] = 1;
+					});
+
+					string = string + stringify(obj) + ')'
+
+					result.push(string);
+
+					callback();
+				}
+			});
+
+		}, function(err){
+			result.sort();
+			cb(err, result);
+		});
+	},
+
+	mongoFind : function(req, cb){
+
+	}
 }

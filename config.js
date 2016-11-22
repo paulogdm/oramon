@@ -4,7 +4,7 @@ module.exports = {
 	mongo : {
 		user : '',
 		password : '',
-		url : ''
+		url : 'mongodb://localhost:27017/oramon'
 	},
 	
 	oracle : {

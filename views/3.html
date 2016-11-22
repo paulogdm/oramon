@@ -9,12 +9,14 @@ db.runCommand( {
    validator: { $or: [ { Sigla: { $exists: true } }, { Nome: { $exists: true } } ] },
    validationLevel: "moderate"
 } )
+<br>
 db.runCommand( {
    collMod: "LE02CIDADE",
    validator: { $or: [ { Nome: { $exists: true } }, { SiglaEstado: { $exists: true } }, { Populacao: { $exists: true } }, 
    { Populacao: { $gte: 0 } ] },
    validationLevel: "moderate"
 } )
+<br>
 db.runCommand( {
    collMod: "LE05URNA",
    validator: { $or: [ { NSerial: { $exists: true } }, { Estado: { $in: [ "funcional", "manutencao" ] } } ] },
